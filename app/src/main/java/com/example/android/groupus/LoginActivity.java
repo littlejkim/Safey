@@ -27,10 +27,11 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordText;
     Button loginButton;
     TextView signupLink;
+    String email;
+    String password;
 
     HashMap<String,String> hashMap = new HashMap<>();
     HttpParsing httpParse = new HttpParsing();
-    public static final String UserEmail = "";
     String finalResult;
     int results;
 
@@ -81,8 +82,8 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        final String email = emailText.getText().toString();
-        final String password = passwordText.getText().toString();
+        email = emailText.getText().toString();
+        password = passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
         class UserLoginClass extends AsyncTask<String,Void,String> {
@@ -101,16 +102,16 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(httpResponseMsg.equalsIgnoreCase("Correct info")){
 
-                    results = 1;
-                    // Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                    //  intent.putExtra(UserEmail,email);
-
-                    // startActivity(intent);
+                    Intent intent = new Intent(LoginActivity.this, BasicActivity.class);
+                    intent.putExtra("email", email);
+                    setResult(RESULT_OK);
+                    startActivityForResult(intent, 1);
+                    finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
                 }
                 else{
-                    results = 0;
+                    onLoginFailed();
 
                 }
 
@@ -128,8 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                 return finalResult;
             }
         }
-        UserLoginClass login = new UserLoginClass();
-        login.execute();
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
@@ -137,11 +137,6 @@ public class LoginActivity extends AppCompatActivity {
                         // On complete call either onLoginSuccess or onLoginFailed
                         UserLoginClass login = new UserLoginClass();
                         login.execute();
-                        if(results == 1) {
-                            onLoginSuccess();
-                        } else {
-                            onLoginFailed();
-                        }
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
@@ -149,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
@@ -160,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
+    */
     @Override
     public void onBackPressed() {
         // Disable going back to the MainActivity

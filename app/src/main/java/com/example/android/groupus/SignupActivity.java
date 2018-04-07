@@ -36,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
     String mobile;
     String password;
     String reEnterPassword;
+    int results = 0;
 
     String ServerAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserRegistration.php";
     HashMap<String, String> hashMap = new HashMap<>();
@@ -66,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Finish the registration screen and return to the Login activity
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BasicActivity.class);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -112,11 +113,23 @@ public class SignupActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 Toast.makeText(SignupActivity.this, httpResponseMsg.toString(), Toast.LENGTH_LONG).show();
 
+                if(httpResponseMsg.equalsIgnoreCase("Success")){
+
+                    results = 1;
+                    Intent intent = new Intent(SignupActivity.this, BasicActivity.class);
+                    intent.putExtra("email", email);
+                    setResult(RESULT_OK);
+                    startActivityForResult(intent, 1);
+                    progressDialog.dismiss();
+                    finish();
+                } else {
+                    onSignupFailed();
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
             protected String doInBackground(String... params) {
-
                 hashMap.put("name", name);
                 hashMap.put("address", address);
                 hashMap.put("email", email);
@@ -127,32 +140,15 @@ public class SignupActivity extends AppCompatActivity {
             }
         }
 
+        RegistrationInnerClass registerUser = new RegistrationInnerClass();
+        registerUser.execute();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        RegistrationInnerClass registerUser = new RegistrationInnerClass();
-                        registerUser.execute();
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
     }
 
 
-    public void onSignupSuccess() {
-
-        signupButton.setEnabled(true);
-        setResult(RESULT_OK, null);
-        finish();
-    }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getBaseContext(), "Account creation failed", Toast.LENGTH_LONG).show();
         signupButton.setEnabled(true);
     }
 
@@ -195,20 +191,25 @@ public class SignupActivity extends AppCompatActivity {
             mobileText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 15) {
+            passwordText.setError("between 4 and 15 alphanumeric characters");
             valid = false;
         } else {
             passwordText.setError(null);
         }
 
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
-            reEnterPasswordText.setError("Password Do not match");
+        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 15 || !(reEnterPassword.equals(password))) {
+            reEnterPasswordText.setError("Password do not match");
             valid = false;
         } else {
             reEnterPasswordText.setError(null);
         }
 
         return valid;
+    }
+    @Override
+    public void onBackPressed() {
+
+
     }
 }
