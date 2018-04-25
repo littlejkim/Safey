@@ -1,4 +1,4 @@
-package com.example.android.groupus;
+package com.example.android.safey;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    String ServerAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserLogin.php";
+    String serverAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserLogin.php";
     private static final int REQUEST_SIGNUP = 0;
 
     EditText emailText;
@@ -31,9 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     String password;
 
     HashMap<String,String> hashMap = new HashMap<>();
-    HttpParsing httpParse = new HttpParsing();
+    UserDataParsing httpParse = new UserDataParsing();
     String finalResult;
-    int results;
 
 
     @Override
@@ -85,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
+
         class UserLoginClass extends AsyncTask<String,Void,String> {
 
             @Override
@@ -110,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
                 }
-                else{
+                else {
                     onLoginFailed();
 
                 }
@@ -124,47 +123,18 @@ public class LoginActivity extends AppCompatActivity {
 
                 hashMap.put("password", password);
 
-                finalResult = httpParse.postRequest(hashMap, ServerAddress);
+                finalResult = httpParse.postRequest(hashMap, serverAddress);
 
                 return finalResult;
             }
         }
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        UserLoginClass login = new UserLoginClass();
-                        login.execute();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        UserLoginClass login = new UserLoginClass();
+        login.execute();
     }
 
-
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.finish();
-            }
-        }
-    }
-    */
     @Override
     public void onBackPressed() {
-        // Disable going back to the MainActivity
         moveTaskToBack(true);
-    }
-
-    public void onLoginSuccess() {
-        loginButton.setEnabled(true);
-        finish();
     }
 
     public void onLoginFailed() {
@@ -179,14 +149,14 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailText.setError("enter a valid email address");
+            emailText.setError("Invalid email address");
             valid = false;
         } else {
             emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
+            passwordText.setError("Password should be between 4 and 12 characters");
             valid = false;
         } else {
             passwordText.setError(null);

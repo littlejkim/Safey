@@ -1,4 +1,4 @@
-package com.example.android.groupus;
+package com.example.android.safey;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by littlejkim on 05/04/2018.
  */
 
-public class HttpParsing {
+public class UserDataParsing {
     String data = "";
     String result ;
     BufferedWriter bufferedWriter ;
@@ -24,6 +24,26 @@ public class HttpParsing {
     BufferedReader bufferedReader ;
     StringBuilder stringBuilder = new StringBuilder();
     URL url;
+
+    public String sendGetRequest(String uri) {
+        try {
+            URL url = new URL(uri);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            String result;
+
+            StringBuilder sb = new StringBuilder();
+
+            while((result = bufferedReader.readLine())!=null){
+                sb.append(result);
+            }
+
+            return sb.toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public String postRequest(HashMap<String, String> Data, String HttpUrlHolder) {
 

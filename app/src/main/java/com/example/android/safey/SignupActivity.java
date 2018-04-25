@@ -1,4 +1,4 @@
-package com.example.android.groupus;
+package com.example.android.safey;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -38,9 +38,9 @@ public class SignupActivity extends AppCompatActivity {
     String reEnterPassword;
     int results = 0;
 
-    String ServerAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserRegistration.php";
+    String serverAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserRegistration.php";
     HashMap<String, String> hashMap = new HashMap<>();
-    HttpParsing httpParse = new HttpParsing();
+    UserDataParsing httpParse = new UserDataParsing();
     String finalResult;
 
     @Override
@@ -98,8 +98,7 @@ public class SignupActivity extends AppCompatActivity {
         password = passwordText.getText().toString();
         reEnterPassword = reEnterPasswordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
-        class RegistrationInnerClass extends AsyncTask<String, Void, String> {
+       class RegistrationInnerClass extends AsyncTask<String, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -135,7 +134,7 @@ public class SignupActivity extends AppCompatActivity {
                 hashMap.put("email", email);
                 hashMap.put("mobile", mobile);
                 hashMap.put("password", password);
-                finalResult = httpParse.postRequest(hashMap, ServerAddress);
+                finalResult = httpParse.postRequest(hashMap, serverAddress);
                 return finalResult;
             }
         }

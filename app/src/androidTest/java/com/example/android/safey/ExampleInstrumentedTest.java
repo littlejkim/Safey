@@ -1,4 +1,4 @@
-package com.example.android.groupus;
+package com.example.android.safey;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

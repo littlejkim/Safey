@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.groupus">
+    package="com.example.android.safey">
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />/>
 
     <application
         android:allowBackup="true"
@@ -11,21 +13,23 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.android.groupus.MainActivity"
+            android:name="com.example.android.safey.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".UploadActivity"
+            android:label="@string/app_name"
+            ></activity>
 
         <activity
-            android:name=".BasicActivity"
+            android:name="com.example.android.safey.BasicActivity"
             android:label="@string/title_activity_basic" >
         </activity>
 
-        <activity android:name="com.example.android.groupus.LoginActivity"
+        <activity android:name="com.example.android.safey.LoginActivity"
             android:theme="@style/AppTheme.Dark" >
             <intent-filter>
                 <action android:name="com.example.android.groupus.LoginActivity" />
@@ -33,7 +37,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.android.groupus.SignupActivity" android:theme="@style/AppTheme.Dark" />
+        <activity android:name="com.example.android.safey.SignupActivity" android:theme="@style/AppTheme.Dark" />
     </application>
 
 </manifest>
