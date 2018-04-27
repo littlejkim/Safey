@@ -6,6 +6,7 @@ public class Report {
     private String latitude;
     private String date;
 
+    // Report information class
     public Report(String comment, String longitude, String latitude, String date) {
         this.setComment(comment);
         this.setLongitude(longitude);
@@ -22,16 +23,8 @@ public class Report {
         this.comment = comment;
     }
 
-    public String getLongitude() {
-        return longitude;
-    }
-
     public void setLongitude(String longitude) {
         this.longitude = longitude;
-    }
-
-    public String getLatitude() {
-        return latitude;
     }
 
     public void setLatitude(String latitude) {

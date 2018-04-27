@@ -24,7 +24,7 @@ public class DownloadReportData extends AsyncTask<Void,Integer,String> {
         this.serverAddress = s;
         this.recyclerView = r;
     }
-
+    //Get reports using Http connection
     private String getData() {
         InputStream inputStream = null;
         String output;
@@ -72,20 +72,20 @@ public class DownloadReportData extends AsyncTask<Void,Integer,String> {
 
     @Override
     protected String doInBackground(Void... voids) {
-        String downloaded = this.getData();
-        return downloaded;
+        String parsedData = this.getData();
+        return parsedData;
     }
 
-
+    // parse downloaded data to recyclerview
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        if(s != null)
+    protected void onPostExecute(String parsedData) {
+        super.onPostExecute(parsedData);
+        if(parsedData != null)
         {
-            ParseData p=new ParseData(context, s, recyclerView);
+            ParseData p = new ParseData(context, parsedData, recyclerView);
             p.execute();
 
-        }else {
+        } else {
             Toast.makeText(context,"Unable to download", Toast.LENGTH_SHORT).show();
         }
     }

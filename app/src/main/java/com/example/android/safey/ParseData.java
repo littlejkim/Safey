@@ -35,33 +35,31 @@ class ParseData extends AsyncTask<Void, Integer, Integer> {
         int x = parseData();
         return x;
     }
-
-
-
+    // set adapter on recyclerview
     @Override
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
         if(integer==1)
         {
-            adapter=new Adapter(context, reportArrayList);
+            adapter = new Adapter(context, reportArrayList);
             recyclerView.setAdapter(adapter);
-        }else {
+        } else {
             Toast.makeText(context,"Unable to parse", Toast.LENGTH_SHORT).show();
         }
     }
 
+    // store report information in report arraylist (parse JsonObject into report object)
     private int parseData() {
         try
         {
-            JSONArray ja=new JSONArray(s);
-            JSONObject jo=null;
-
+            JSONArray jsonArray = new JSONArray(s);
+            JSONObject jsonObject = null;
             reportArrayList.clear();
 
-            for(int i=0;i<ja.length();i++)
+            for(int i = 0; i< jsonArray.length(); i++)
             {
-                jo=ja.getJSONObject(i);
-                Report report = new Report(jo.getString("comment"), jo.getString("longitude"), jo.getString("latitude"), jo.getString("date"));
+                jsonObject = jsonArray.getJSONObject(i);
+                Report report = new Report(jsonObject.getString("comment"), jsonObject.getString("longitude"), jsonObject.getString("latitude"), jsonObject.getString("date"));
                 reportArrayList.add(report);
             }
 
@@ -70,7 +68,6 @@ class ParseData extends AsyncTask<Void, Integer, Integer> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 }

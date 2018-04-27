@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
-
+    // Fields for user information
     EditText nameText;
     EditText addressText;
     EditText emailText;
@@ -38,6 +38,7 @@ public class SignupActivity extends AppCompatActivity {
     String reEnterPassword;
     int results = 0;
 
+    // Variables for http parse class
     String serverAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/UserRegistration.php";
     HashMap<String, String> hashMap = new HashMap<>();
     UserDataParsing httpParse = new UserDataParsing();
@@ -47,6 +48,8 @@ public class SignupActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        // Set view to models (xml)
         nameText = (EditText) findViewById(R.id.input_name);
         addressText = (EditText) findViewById(R.id.input_address);
         emailText = (EditText) findViewById(R.id.input_email);
@@ -67,7 +70,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Finish the registration screen and return to the Login activity
-                Intent intent = new Intent(getApplicationContext(), BasicActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -75,22 +78,24 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+    // Signup method
 
-        if (!validate()) {
+    public void signup() {
+        if (!validation()) {
             onSignupFailed();
             return;
         }
 
         signupButton.setEnabled(false);
 
+        //Attempting to create account
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
+        // Get text from fields
         name = nameText.getText().toString();
         address = addressText.getText().toString();
         email = emailText.getText().toString();
@@ -112,13 +117,11 @@ public class SignupActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 Toast.makeText(SignupActivity.this, httpResponseMsg.toString(), Toast.LENGTH_LONG).show();
 
-                if(httpResponseMsg.equalsIgnoreCase("Success")){
-
+                if(httpResponseMsg.equalsIgnoreCase("Success")){ // PHP echo from server "Success"
                     results = 1;
                     Intent intent = new Intent(SignupActivity.this, BasicActivity.class);
                     intent.putExtra("email", email);
-                    setResult(RESULT_OK);
-                    startActivityForResult(intent, 1);
+                    startActivity(intent);
                     progressDialog.dismiss();
                     finish();
                 } else {
@@ -129,6 +132,7 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(String... params) {
+                // send user registration information to server using http parse class
                 hashMap.put("name", name);
                 hashMap.put("address", address);
                 hashMap.put("email", email);
@@ -138,20 +142,18 @@ public class SignupActivity extends AppCompatActivity {
                 return finalResult;
             }
         }
-
         RegistrationInnerClass registerUser = new RegistrationInnerClass();
         registerUser.execute();
 
     }
-
-
 
     public void onSignupFailed() {
         Toast.makeText(getBaseContext(), "Account creation failed", Toast.LENGTH_LONG).show();
         signupButton.setEnabled(true);
     }
 
-    public boolean validate() {
+    // validating user input
+    public boolean validation() {
         boolean valid = true;
 
         String name = nameText.getText().toString();
@@ -175,7 +177,6 @@ public class SignupActivity extends AppCompatActivity {
             addressText.setError(null);
         }
 
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailText.setError("enter a valid email address");
             valid = false;
@@ -190,14 +191,14 @@ public class SignupActivity extends AppCompatActivity {
             mobileText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 15) {
-            passwordText.setError("between 4 and 15 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
+            passwordText.setError("between 4 and 12 alphanumeric characters");
             valid = false;
         } else {
             passwordText.setError(null);
         }
 
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 15 || !(reEnterPassword.equals(password))) {
+        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 12 || !(reEnterPassword.equals(password))) {
             reEnterPasswordText.setError("Password do not match");
             valid = false;
         } else {
@@ -206,9 +207,9 @@ public class SignupActivity extends AppCompatActivity {
 
         return valid;
     }
+    // Do nothing on back button pressed
     @Override
     public void onBackPressed() {
-
 
     }
 }
