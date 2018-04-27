@@ -20,8 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 public class BasicActivity extends AppCompatActivity {
-
-    String serverAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/data.php";
+    String serverAddress = "http://ec2-18-188-77-130.us-east-2.compute.amazonaws.com/data.php"; // address for data download
     Button upload;
     String email;
 
@@ -41,14 +40,13 @@ public class BasicActivity extends AppCompatActivity {
                 finish();
             }
         });
-        // Create c~
+        // Create recyclerview and start downloading report data
         final RecyclerView rv = (RecyclerView) findViewById(R.id.mRecycler);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
 
         DownloadReportData d = new DownloadReportData(BasicActivity.this, serverAddress, rv);
         d.execute();
-
 
     }
 
